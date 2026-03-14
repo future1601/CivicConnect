@@ -303,47 +303,38 @@ export function ChatbotPage() {
   };
 
   return (
-    <div className="space-y-6">
-      <div className="text-center py-4">
-        <h1 className="text-2xl font-semibold text-gray-900 mb-2">
-          Complaint Data Assistant
-        </h1>
-        <p className="text-gray-600">
-          Ask me anything about complaint patterns, statistics, and data
-          analysis
-        </p>
-      </div>
-
-      {/* Stats Dashboard */}
+    <div className="space-y-5">
       {stats && (
-        <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-6">
-          <Card>
+        <div className="mb-2 grid grid-cols-1 gap-4 md:grid-cols-4">
+          <Card className="rounded-[22px] border-slate-200 bg-white/94 shadow-[0_18px_48px_-34px_rgba(15,23,42,0.3)]">
             <CardHeader className="pb-2">
-              <CardTitle className="text-sm font-medium">
+              <CardTitle className="text-sm font-medium text-slate-500">
                 Total Complaints
               </CardTitle>
             </CardHeader>
             <CardContent>
-              <div className="text-2xl font-bold">{stats.total_complaints}</div>
+              <div className="text-2xl font-bold text-slate-900">
+                {stats.total_complaints}
+              </div>
             </CardContent>
           </Card>
 
-          <Card>
+          <Card className="rounded-[22px] border-slate-200 bg-white/94 shadow-[0_18px_48px_-34px_rgba(15,23,42,0.3)]">
             <CardHeader className="pb-2">
-              <CardTitle className="text-sm font-medium">
+              <CardTitle className="text-sm font-medium text-slate-500">
                 Recent (7 days)
               </CardTitle>
             </CardHeader>
             <CardContent>
-              <div className="text-2xl font-bold text-blue-600">
+              <div className="text-2xl font-bold text-sky-700">
                 {stats.recent_complaints}
               </div>
             </CardContent>
           </Card>
 
-          <Card>
+          <Card className="rounded-[22px] border-slate-200 bg-white/94 shadow-[0_18px_48px_-34px_rgba(15,23,42,0.3)]">
             <CardHeader className="pb-2">
-              <CardTitle className="text-sm font-medium">
+              <CardTitle className="text-sm font-medium text-slate-500">
                 Status Distribution
               </CardTitle>
             </CardHeader>
@@ -351,7 +342,7 @@ export function ChatbotPage() {
               <div className="space-y-1">
                 {Object.entries(stats.by_status).map(([status, count]) => (
                   <div key={status} className="flex justify-between text-sm">
-                    <span className="capitalize">{status}</span>
+                    <span className="capitalize text-slate-700">{status}</span>
                     <Badge variant="outline">{count}</Badge>
                   </div>
                 ))}
@@ -359,9 +350,9 @@ export function ChatbotPage() {
             </CardContent>
           </Card>
 
-          <Card>
+          <Card className="rounded-[22px] border-slate-200 bg-white/94 shadow-[0_18px_48px_-34px_rgba(15,23,42,0.3)]">
             <CardHeader className="pb-2">
-              <CardTitle className="text-sm font-medium">
+              <CardTitle className="text-sm font-medium text-slate-500">
                 Priority Distribution
               </CardTitle>
             </CardHeader>
@@ -369,7 +360,7 @@ export function ChatbotPage() {
               <div className="space-y-1">
                 {Object.entries(stats.by_priority).map(([priority, count]) => (
                   <div key={priority} className="flex justify-between text-sm">
-                    <span className="capitalize">
+                    <span className="capitalize text-slate-700">
                       {priority.replace("_", " ")}
                     </span>
                     <Badge variant="outline">{count}</Badge>
@@ -381,10 +372,19 @@ export function ChatbotPage() {
         </div>
       )}
 
-      {/* Chat Interface */}
-      <Card className="h-[600px] flex flex-col">
+      <Card className="flex h-[680px] flex-col overflow-hidden rounded-[26px] border-slate-200 bg-white/95 shadow-[0_20px_56px_-36px_rgba(15,23,42,0.34)]">
+        <CardHeader className="border-b border-slate-200 bg-slate-50/80">
+          <CardTitle className="text-lg font-semibold text-slate-900">
+            Complaint Data Assistant
+          </CardTitle>
+          <p className="text-sm leading-6 text-slate-600">
+            Ask for status counts, recent complaints, category summaries, or
+            high-priority case information.
+          </p>
+        </CardHeader>
+
         {/* Chat Messages */}
-        <CardContent className="flex-1 overflow-y-auto p-4 space-y-4">
+        <CardContent className="flex-1 space-y-4 overflow-y-auto p-4">
           {messages.map((message) => (
             <div
               key={message.id}
@@ -395,8 +395,8 @@ export function ChatbotPage() {
               <div
                 className={`max-w-[80%] rounded-lg px-4 py-2 ${
                   message.sender === "user"
-                    ? "bg-blue-600 text-white"
-                    : "bg-gray-100 text-gray-900"
+                    ? "bg-slate-900 text-white"
+                    : "bg-slate-100 text-slate-900"
                 }`}
               >
                 {message.sender === "bot" ? (
@@ -415,8 +415,8 @@ export function ChatbotPage() {
                 <div
                   className={`text-xs mt-1 ${
                     message.sender === "user"
-                      ? "text-blue-100"
-                      : "text-gray-500"
+                      ? "text-slate-300"
+                      : "text-slate-500"
                   }`}
                 >
                   {message.timestamp.toLocaleTimeString()}
@@ -426,15 +426,15 @@ export function ChatbotPage() {
           ))}
           {isLoading && (
             <div className="flex justify-start">
-              <div className="bg-gray-100 rounded-lg px-4 py-2">
+              <div className="rounded-lg bg-slate-100 px-4 py-2">
                 <div className="flex space-x-1">
-                  <div className="w-2 h-2 bg-gray-400 rounded-full animate-bounce"></div>
+                  <div className="h-2 w-2 animate-bounce rounded-full bg-slate-400"></div>
                   <div
-                    className="w-2 h-2 bg-gray-400 rounded-full animate-bounce"
+                    className="h-2 w-2 animate-bounce rounded-full bg-slate-400"
                     style={{ animationDelay: "0.1s" }}
                   ></div>
                   <div
-                    className="w-2 h-2 bg-gray-400 rounded-full animate-bounce"
+                    className="h-2 w-2 animate-bounce rounded-full bg-slate-400"
                     style={{ animationDelay: "0.2s" }}
                   ></div>
                 </div>
@@ -445,16 +445,16 @@ export function ChatbotPage() {
         </CardContent>
 
         {/* Quick Questions */}
-        <div className="border-t p-4">
-          <p className="text-sm text-gray-600 mb-2">Quick questions:</p>
-          <div className="flex flex-wrap gap-2 mb-4">
+        <div className="border-t border-slate-200 bg-slate-50/70 p-4">
+          <p className="mb-2 text-sm text-slate-600">Quick questions:</p>
+          <div className="mb-4 flex flex-wrap gap-2">
             {quickQuestions.map((question, index) => (
               <Button
                 key={index}
                 variant="outline"
                 size="sm"
                 onClick={() => handleQuickQuestion(question)}
-                className="text-xs"
+                className="rounded-full border-slate-200 bg-white text-xs text-slate-700 hover:bg-slate-100"
               >
                 {question}
               </Button>
@@ -463,21 +463,21 @@ export function ChatbotPage() {
         </div>
 
         {/* Message Input */}
-        <div className="border-t p-4">
+        <div className="border-t border-slate-200 p-4">
           <div className="flex gap-2">
             <textarea
               value={inputMessage}
               onChange={(e) => setInputMessage(e.target.value)}
               onKeyPress={handleKeyPress}
               placeholder="Ask me about complaint data..."
-              className="flex-1 resize-none rounded-md border border-gray-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+              className="flex-1 resize-none rounded-xl border border-slate-200 bg-slate-50 px-3 py-2 text-sm focus:border-sky-500 focus:outline-none focus:ring-2 focus:ring-sky-500/20"
               rows={2}
               disabled={isLoading}
             />
             <Button
               onClick={sendMessage}
               disabled={!inputMessage.trim() || isLoading}
-              className="px-6"
+              className="rounded-xl bg-slate-900 px-6 text-white hover:bg-slate-800"
             >
               Send
             </Button>
