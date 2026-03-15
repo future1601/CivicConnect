@@ -62,3 +62,11 @@ logs/
 
 whatsapp_bot.db
 whatsapp_bot.db
+
+# Generated Python artifacts
+__pycache__/
+*.py[cod]
+
+# Calling service runtime artifacts
+newservice/calling_service/storage/  
+  

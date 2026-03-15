@@ -1,4 +1,252 @@
-Stores completed complaints.
+# CivicConnect
+
+**AI-powered civic intelligence, grievance redressal, and emergency response platform**
+
+CivicConnect is a full-stack public-service operations system designed for hackathon-scale smart governance use cases. It brings together citizen complaint intake, AI-assisted case understanding, admin-side analytics, CCTV-driven incident escalation, and voice-agent based emergency calling into a single operational workflow.
+
+This is not just a dashboard and not just a chatbot. The project is framed as a unified civic command platform for:
+
+- WhatsApp-based grievance registration
+- AI-assisted complaint validation and classification
+- map-first administrative monitoring
+- real-time CCTV incident escalation
+- fall, fight, accident, and suspicious-activity detection workflows
+- broader calamity and disaster-response scenarios
+- outbound alert calling and collect-details voice-agent flows
+
+## Vision
+
+The core idea behind CivicConnect is to reduce the gap between **incident detection**, **citizen complaint reporting**, and **government response coordination**.
+
+In a realistic city-operations setting, issues can originate from two places:
+
+- a citizen reporting a civic problem through WhatsApp
+- a machine-detected emergency event from a camera or monitoring pipeline
+
+CivicConnect is the layer that receives those signals, structures them, enriches them with AI, persists them, surfaces them to operators, and escalates them through voice workflows when rapid action is needed.
+
+## What The Project Solves
+
+Traditional complaint systems are fragmented:
+
+- complaints live in one tool
+- maps and analytics live in another
+- emergency escalation is manual
+- CCTV intelligence is disconnected from public-administration workflows
+
+CivicConnect closes that loop by combining:
+
+- grievance intake
+- public-safety incident intelligence
+- AI classification
+- dashboard-driven decision support
+- automated voice escalation
+
+## Solution Pillars
+
+### 1. Citizen Grievance Intake
+
+Citizens can report issues over WhatsApp using text, audio, location, and image inputs. The system guides them through a structured intake flow instead of depending on a rigid form.
+
+### 2. Administrative Command Dashboard
+
+Authorities get a web dashboard for complaint review, map-based inspection, statistics, case details, chatbot-assisted querying, and calling-service monitoring.
+
+### 3. AI Understanding Layer
+
+Gemini is used to:
+
+- validate whether incoming content is a valid complaint
+- interpret audio inputs
+- validate location context
+- classify complaints by category, department, priority, and resolution time
+- support the admin chatbot
+- assist with spoken-call transcript processing in the calling layer
+
+### 4. CCTV Incident Intelligence
+
+The broader solution integrates with real-time detector pipelines for events such as:
+
+- fall detection
+- fight detection
+- accident detection
+- suspicious activity
+
+The same escalation pattern is positioned for wider calamity-response scenarios as well, which is important to the platform story for emergency governance.
+
+### 5. Voice-Agent Escalation
+
+When urgent intervention is needed, the system connects to a calling agent that can:
+
+- place broadcast alert calls
+- speak AI-generated emergency messages
+- collect issue details from a caller
+- ask for location explicitly
+- transcribe responses back into structured records
+
+## End-To-End Story
+
+The project is meant to demonstrate a complete civic operations lifecycle:
+
+1. A citizen reports a problem on WhatsApp, or a detector flags a live incident.
+2. CivicConnect structures the incoming signal.
+3. AI validates and enriches the event.
+4. The event becomes visible on the admin dashboard.
+5. If the event is urgent, the voice agent escalates it through automated calling.
+6. Operators use the dashboard to review evidence, location, priority, and status.
+
+## High-Level Architecture
+
+```text
+Citizens -> WhatsApp Cloud API -------------------------------+
+                                                             |
+CCTV / Detector Services -> Incident Payloads ---------------+-> CivicConnect Backend -> SQLite
+                                                             |          |
+                                                             |          +-> Gemini AI
+                                                             |          +-> Uploaded evidence storage
+                                                             |          +-> Analytics + admin APIs
+                                                             |          +-> Chatbot API
+                                                             |          +-> Calling-service proxy
+                                                             |                     |
+                                                             |                     +-> Twilio + voice agent
+                                                             |
+Admin Dashboard (React + TypeScript) ------------------------+
+```
+
+## Major Components
+
+### Backend
+
+The backend is a FastAPI application that acts as the operational core of the system.
+
+Main responsibilities:
+
+- WhatsApp webhook handling
+- user-session management
+- complaint workflow orchestration
+- AI-based validation and classification
+- report persistence
+- analytics APIs for the dashboard
+- image serving
+- chatbot APIs
+- detector alert ingestion
+- calling-service proxy integration
+
+Key backend files:
+
+- `Backend/server.py`
+- `Backend/workflow.py`
+- `Backend/chatbot.py`
+- `Backend/database.py`
+- `Backend/models.py`
+- `Backend/start_server.py`
+
+### Frontend
+
+The frontend is a React 18 + TypeScript administrative dashboard built with Vite.
+
+It provides a single operator-facing surface for:
+
+- complaint monitoring
+- location intelligence
+- administrative review
+- chatbot-assisted querying
+- calling-system visibility
+
+Main UI areas:
+
+- `Home`
+- `Map`
+- `Complaints`
+- `Calls`
+- `Chatbot`
+
+Key frontend files:
+
+- `Frontend/src/App.tsx`
+- `Frontend/src/components/Navigation.tsx`
+- `Frontend/src/components/Heatmap.tsx`
+- `Frontend/src/components/StatisticsSection.tsx`
+- `Frontend/src/components/ComplaintsTable.tsx`
+- `Frontend/src/components/ComplaintDetails.tsx`
+- `Frontend/src/components/CallingConsolePage.tsx`
+- `Frontend/src/components/ChatbotPage.tsx`
+- `Frontend/src/services/api.ts`
+
+### Detector And Calling Stack
+
+The broader workspace also includes companion services that integrate with CivicConnect:
+
+- `testproj/detection_services/fall_fight_detection.py`
+- `testproj/detection_services/accident_suspicious_detection.py`
+- `testproj/newservice/calling_service`
+- `testproj/newservice/detection_service`
+
+These services are important to the overall project narrative:
+
+- the detector services watch live feeds and detect high-risk public-safety events
+- the calling service acts as the voice-agent escalation layer
+- CivicConnect acts as the command-and-control surface where those machine-generated incidents become visible to administrators
+
+## Citizen Complaint Workflow
+
+The WhatsApp flow is designed as a guided intake conversation.
+
+Typical sequence:
+
+1. The citizen sends a message on WhatsApp.
+2. The backend finds or creates an active session.
+3. The citizen shares the issue as text or audio.
+4. Gemini validates that the content is a genuine complaint.
+5. The backend asks for the location.
+6. The user responds with text location or a WhatsApp location pin.
+7. The backend asks for a supporting image.
+8. Gemini validates the image and classifies the complaint.
+9. The complaint is stored with a generated report ID.
+10. The user receives a structured acknowledgement.
+
+## Incident Detection Workflow
+
+The detector-driven flow is the real-time emergency side of the platform.
+
+Typical sequence:
+
+1. A detector service observes a fight, fall, accident, or suspicious event.
+2. The detector verifies the event and prepares a structured alert payload.
+3. CivicConnect receives that payload and creates a dashboard-visible record.
+4. The event appears in the admin complaint queue and detail view.
+5. CivicConnect forwards the alert to the calling layer if escalation is required.
+6. A responder receives an outbound voice alert.
+
+This is the part of the project that gives it stronger hackathon optics as a public-safety and civic-intelligence platform rather than a plain complaint form.
+
+## Voice-Agent Workflow
+
+The voice-agent side supports two important patterns.
+
+### Broadcast Alert Calls
+
+Used for fast escalation when an incident has already been understood and only needs to be communicated.
+
+### Collect-Details Calls
+
+Used when the system needs to gather more information from a person through a call. The current flow is designed to:
+
+- ask for the issue
+- ask for the exact location
+- record the response
+- transcribe the answer
+- sync the result back into CivicConnect
+
+## Data Model
+
+The backend uses SQLite and currently revolves around three main tables.
+
+### `complaint_reports`
+
+Stores completed or registered complaints and detector-originated incidents.
+
+Important fields:
 
 - `report_id`
 - `session_id`
@@ -16,9 +264,9 @@ Stores completed complaints.
 
 ### `user_sessions`
 
-Stores in-progress complaint conversations.
+Stores in-progress WhatsApp complaint sessions.
 
-Key fields:
+Important fields:
 
 - `session_id`
 - `phone_number`
@@ -32,9 +280,9 @@ Key fields:
 
 ### `collected_call_records`
 
-Stores synchronized results from collect-details call workflows.
+Stores data coming back from collect-details voice flows.
 
-Key fields:
+Important fields:
 
 - `token`
 - `flow`
@@ -51,16 +299,15 @@ Key fields:
 
 ## Main API Surface
 
-The backend exposes several groups of routes.
+The backend exposes several route groups.
 
-### WhatsApp Webhook
+### WhatsApp And Health
 
-- `GET /webhook`
-- `POST /webhook`
 - `GET /`
 - `POST /`
-
-These are used for webhook verification and inbound WhatsApp message handling.
+- `GET /webhook`
+- `POST /webhook`
+- `GET /health`
 
 ### Reports And Analytics
 
@@ -70,24 +317,28 @@ These are used for webhook verification and inbound WhatsApp message handling.
 - `GET /api/reports/by-location`
 - `GET /api/filter-options`
 - `GET /analytics`
-- `GET /reports/{phone_number}`
 
 ### Chatbot
 
 - `POST /api/chatbot/message`
 - `GET /api/chatbot/stats`
 
-### Uploads And Health
+### Uploads
 
 - `GET /api/uploads/{filename}`
-- `GET /health`
 
-### Calling Integration
+### Calling And Detection Integration
 
 - `GET /api/calling/status`
+- `POST /api/calling/broadcast`
+- `POST /api/calling/collect-details`
+- `GET /api/calling/collected-records`
 - `POST /api/calls/broadcast`
 - `POST /api/calls/collect-details`
-- `GET /api/calling/collected-records`
+- `POST /api/detection/alerts/broadcast`
+- `POST /api/detection/alerts/collect-details`
+- `GET|POST /webhooks/twilio/call-flow`
+- `GET|HEAD /audio/{filename}`
 
 ## Tech Stack
 
@@ -99,32 +350,39 @@ These are used for webhook verification and inbound WhatsApp message handling.
 - Requests
 - Python-dotenv
 - Google Gemini SDKs
-- LangChain / LangChain Google GenAI integration
+- LangChain and LangChain Google GenAI
 
 ### Frontend
 
 - React 18
 - TypeScript
 - Vite
-- Lucide React
 - Mapbox GL
 - Recharts
+- Lucide React
 - Radix UI
 
-## Local Development Setup
+### Integrated External Services
+
+- WhatsApp Cloud API
+- Google Gemini
+- Mapbox
+- Twilio
+
+## Local Setup
 
 ### Prerequisites
 
 - Python 3.10+
 - Node.js 18+
 - npm
-- a Gemini API key
-- WhatsApp Cloud API credentials if you want to test the citizen workflow
-- Mapbox public token for map rendering
+- Gemini API access
+- WhatsApp Cloud API credentials
+- Mapbox token for map rendering
 
 ## Backend Setup
 
-From the `CivicConnect/Backend` directory:
+From `CivicConnect/Backend`:
 
 ```bash
 python -m venv venv
@@ -132,7 +390,7 @@ venv\Scripts\activate
 pip install -r requirements.txt
 ```
 
-Create `Backend/.env` from `Backend/.env.example` and provide values for:
+Create `Backend/.env` from `Backend/.env.example`:
 
 ```env
 WHATSAPP_TOKEN=...
@@ -145,7 +403,7 @@ PORT=8000
 DEBUG=False
 ```
 
-Calling integration variables:
+If you are using the calling and detector stack as part of the full demo, also configure:
 
 ```env
 NEW_CALLING_SERVICE_BASE_URL=http://127.0.0.1:5002
@@ -174,7 +432,7 @@ http://localhost:8000
 
 ## Frontend Setup
 
-From the `CivicConnect/Frontend` directory:
+From `CivicConnect/Frontend`:
 
 ```bash
 npm install
@@ -201,42 +459,27 @@ Default frontend URL:
 http://localhost:3000
 ```
 
-## Running The Full Local Stack
+## Full Demo Stack
 
-Run the backend first:
-
-```bash
-cd Backend
-python server.py
-```
-
-Then run the frontend:
-
-```bash
-cd Frontend
-npm run dev
-```
-
-For the full emergency-response flow, also run the separate calling service and point CivicConnect at it with `NEW_CALLING_SERVICE_BASE_URL`.
-
-For the full hackathon demonstration, the typical stack is:
+For the strongest demonstration of the project, the usual stack is:
 
 1. CivicConnect backend on `8000`
 2. CivicConnect frontend on `3000`
 3. calling service on `5002`
 4. one or more detector services on a separate machine or process
+5. ngrok or equivalent public exposure for the backend
 
-Typical demonstration flow:
+Typical demo path:
 
-1. A citizen files a complaint on WhatsApp, or a detector identifies a live incident.
-2. CivicConnect stores and structures the incident.
-3. The admin dashboard immediately reflects the complaint or CCTV event.
-4. If escalation is required, CivicConnect forwards the request to the voice agent.
-5. Twilio places the outbound call and can collect spoken details back into the platform.
+1. A citizen reports a grievance, or a detector flags an emergency.
+2. CivicConnect turns that input into a structured operational record.
+3. The dashboard reflects the case in real time.
+4. The voice agent escalates urgent events through outbound calls.
+5. Authorities use the dashboard to review evidence, category, location, priority, and status.
 
 ## Frontend To Backend Contract
 
-The frontend expects the backend API base URL to point at `/api`.
+The frontend expects the backend API base URL to point to `/api`.
 
 Example:
 
@@ -244,104 +487,47 @@ Example:
 VITE_API_BASE_URL=http://localhost:8000/api
 ```
 
-The backend itself still exposes some non-`/api` routes for WhatsApp webhooks and health checks.
+## Why This Project Stands Out
 
-## File Uploads
+CivicConnect is compelling because it combines normally separate systems into one story:
 
-Complaint images are stored on disk under backend uploads directories, and the frontend accesses them through:
+- citizen-facing grievance intake
+- AI-powered understanding
+- administrative oversight
+- CCTV-driven incident intelligence
+- public-safety escalation
+- voice-agent based response coordination
 
-- `GET /api/uploads/{filename}`
+That makes the project suitable for a strong hackathon narrative around:
 
-Detector-originated images can also be normalized into backend storage so they appear in the complaint detail view.
+- smart cities
+- urban safety
+- digital governance
+- emergency response modernization
+- AI-assisted public administration
 
-## Environment Variables Summary
-
-### Backend
-
-- `WHATSAPP_TOKEN`
-- `PHONE_NUMBER_ID`
-- `VERIFY_TOKEN`
-- `GEMINI_API_KEY`
-- `DATABASE_URL`
-- `HOST`
-- `PORT`
-- `DEBUG`
-- `NEW_CALLING_SERVICE_BASE_URL`
-- `NEW_CALLING_SERVICE_PUBLIC_BASE_URL`
-- `CIVICCONNECT_PUBLIC_BASE_URL`
-- `CALLING_SERVICE_TIMEOUT`
-- `GEMINI_CHAT_MODEL` or `GEMINI_MODEL` for chatbot model override
-
-### Frontend
-
-- `VITE_API_BASE_URL`
-- `VITE_MAPBOX_ACCESS_TOKEN`
-- `VITE_APP_NAME`
-- `VITE_APP_VERSION`
-
-## Security And Operational Notes
+## Security Notes
 
 - Do not commit `.env` files.
 - Do not commit the live SQLite database.
 - Do not commit uploaded user images.
-- Rotate credentials immediately if they are ever committed to Git history.
-- The Mapbox token used in the frontend is a public browser token, but it should still be scoped and managed properly.
-
-## Troubleshooting
-
-### Frontend cannot reach backend
-
-Check:
-
-- backend is running on port `8000`
-- `VITE_API_BASE_URL` points to `http://localhost:8000/api`
-- CORS is allowing your frontend dev origin
-
-### WhatsApp webhook verification fails
-
-Check:
-
-- `VERIFY_TOKEN`
-- public webhook URL configuration in Meta
-- backend is publicly reachable through your tunnel or deployment setup
-
-### Maps do not render
-
-Check:
-
-- `VITE_MAPBOX_ACCESS_TOKEN`
-- browser console for blocked token or style-loading errors
-
-### Calling routes show as unavailable
-
-Check:
-
-- `NEW_CALLING_SERVICE_BASE_URL`
-- the separate calling service is running
-- `CIVICCONNECT_PUBLIC_BASE_URL` is configured when Twilio callbacks need a public route
+- Rotate credentials if they are ever exposed in Git history.
 
 ## Additional Documentation
 
-For deeper details, also see:
+See also:
 
 - `PROJECT_DOCUMENTATION.md`
 - `Backend/BACKEND_NON_TECHNICAL_GUIDE.md`
 
-## Why This Matters
-
-CivicConnect is designed as a unified civic operations stack rather than a narrow complaint form.
-
-It brings together:
-
-- citizen grievance intake
-- AI-assisted classification and validation
-- CCTV-driven incident intelligence
-- emergency voice-call escalation
-- structured transcript capture
-- administrative analytics, mapping, and review
-
-That combination makes it suitable for a hackathon narrative around smart governance, urban safety, responsive public administration, and real-time civic intelligence.
-
 ## Summary
 
-CivicConnect is a full-stack governance and emergency-response platform with:
+CivicConnect is a full-stack civic operations platform that unifies:
+
+- WhatsApp complaint registration
+- admin dashboard monitoring
+- AI-based complaint and incident understanding
+- fall, fight, accident, and suspicious-activity escalation
+- calamity-response positioning
+- voice-agent calling for alerts and information collection
+- analytics, maps, and chatbot-assisted administration
